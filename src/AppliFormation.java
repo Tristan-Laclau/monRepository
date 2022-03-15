@@ -1,6 +1,6 @@
 
 public class AppliFormation {
-	
+
 	private static String[] MENUFORMATIONS = {"0","COURS          ", "NB/JOURS", "DESCRIPTION                       ","PRIX"};
 	private static String[] FORMATION1     = {"1","Java           ", "   20   ", "Java SE 8 : Syntaxe & Poo         ","3000"};
 	private static String[] FORMATION2     = {"2","Java avancé    ", "   20   ", "Exceptions, fichiers, Jdbc, thread","5000"};
@@ -9,6 +9,8 @@ public class AppliFormation {
 	private static String[] FORMATION5     = {"5","C#             ", "   20   ", "DotNetCore                        ","5000"};
 	public static String[][] LISTEFORMATIONS = new String [][] {MENUFORMATIONS,FORMATION1,FORMATION2, FORMATION3,FORMATION4,FORMATION5};
 	
+	
+
 	/**
 	 * afficher un message de bienvenue
 	 * 
@@ -19,20 +21,20 @@ public class AppliFormation {
 		System.out.println("|Nous allons vous proposer une liste de formations actuellement disponnibles|");
 		System.out.println("-----------------------------------------------------------------------------");
 	}
-	
+
 	/**
 	 * Affiche la liste des formations
 	 * 
 	 * 
 	 */
-	
+
 	public static void afficherListeFormations() {
 		for(int i = 0 ; i < LISTEFORMATIONS.length ; i++ ) {
 			afficherUneFormation(LISTEFORMATIONS[i]);
 			System.out.println();
 		}
 	}
-	
+
 	/**
 	 * Affiche une formation
 	 * @param formation : la formation à afficher
@@ -42,7 +44,7 @@ public class AppliFormation {
 			System.out.print(formation[i] + " | ");
 		}
 	}
-	
+
 	/**
 	 * Main du programme
 	 * 
@@ -50,12 +52,12 @@ public class AppliFormation {
 	 */
 
 	public static void main (String[] args) {
-		
+
 		afficherMessageBienvenue();
-		
+
 		afficherListeFormations();
-		
+
 	}
-	
-	
+
+
 }
