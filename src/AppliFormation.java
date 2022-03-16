@@ -1,7 +1,10 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class AppliFormation {
+	
+	public static Scanner scan = new Scanner (System.in);
 
 	/*
 	private static String[] MENUFORMATIONS = {"0","COURS          ", "NB/JOURS", "DESCRIPTION                       ","PRIX"};
@@ -13,14 +16,12 @@ public class AppliFormation {
 	public static String[][] LISTEFORMATIONS = new String [][] {MENUFORMATIONS,FORMATION1,FORMATION2, FORMATION3,FORMATION4,FORMATION5};
 	 */
 	
-	private static String[] NOMFORMATION = {"Cours          ","Java           ","Java avancé    ","Spring         ","Php framworks  ","C#             "};
-	private static String[] DUREEFORMATION = {"NB/JOURS","   20   ","   20   ","   20   ","   15   ","   20   "};
-	private static String[] DESCRIPTIONFORMATION = {"Description                        ","Java SE 8 : Syntaxe & Poo          ","Exceptions, fichiers, Jdbc, thread ","Spring core/Mvc/Security           ","Symphony                           ","DotNetCore                         "};
+	private static String[] NOMFORMATION = {"Cours","Java","Java avancé","Spring","Php framworks","C#"};
+	private static String[] DUREEFORMATION = {"NB/JOURS","20","20","20","15","20"};
+	private static String[] DESCRIPTIONFORMATION = {"Description","Java SE 8 : Syntaxe & Poo","Exceptions, fichiers, Jdbc, thread ","Spring core/Mvc/Security","Symphony","DotNetCore"};
 	private static String[] PRIXFORMATION = {"Prix","3000","5000","5000","2500","5000"};
 
 	public static HashMap<Integer, ArrayList<String>> LISTEFORMATIONS = new HashMap<Integer, ArrayList<String>>();
-
-	//On rempli la Hashmap
 
 	/**
 	 * Rempli la table avec les formations renvoyées par createFormation
@@ -88,9 +89,28 @@ public class AppliFormation {
 	 * @param formation : la formation à afficher
 	 */
 	public static void displayCourse(ArrayList<String> formation) {
-		for(int i = 0 ; i < formation.size() ; i++ ) {
-			System.out.print(formation.get(i) + " | ");
-		}
+		
+			System.out.printf("%-15s | %-10s | %-40s |%-4s |",formation.get(0), formation.get(1),formation.get(2),formation.get(3));
+		//	System.out.print(formation.get(i) + " | ");
+		
+	}
+	
+	/**
+	 * Affiche le menu principal
+	 */
+	
+	public static void displayMenu() {
+		
+		System.out.println("-----------------------------------------------------------------------------");
+		
+		System.out.println("Que souhaitez-vous faire?");
+		System.out.println("1 : Ajouter une formation à mon panier");
+		System.out.println("2 : Retirer une formation de mon panier");
+		System.out.println("3 : Afficher mon panier");
+		System.out.println("4 : Quitter");
+		
+		
+		
 	}
 
 	/**
@@ -105,6 +125,10 @@ public class AppliFormation {
 		afficherMessageBienvenue();
 
 		displayCourseList();
+		
+		displayMenu();
+		
+		scan.close();
 
 	}
 
