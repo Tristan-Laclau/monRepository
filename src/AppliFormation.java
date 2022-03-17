@@ -39,6 +39,10 @@ public class AppliFormation {
 		}
 	}
 
+	/**
+	 * Instancie le panier
+	 */
+
 	public static void createCart() {
 
 		for (int i = 0 ; i < NOMFORMATION.length ; i ++) {
@@ -98,6 +102,10 @@ public class AppliFormation {
 		}
 		System.out.println("-------------------------------------------------------------------------------");
 	}
+	/**
+	 * Affiche les formations contenues dans le panier
+	 * @param courseList - le panier à afficher
+	 */
 
 	public static void displayCart(HashMap<Integer, ArrayList<String>> courseList) {
 
@@ -111,8 +119,8 @@ public class AppliFormation {
 
 			for(int i = 1 ; i < courseList.size() ; i++ ) {
 				if(courseList.get(i).get(4) != "0") {
-				displayCourseWithQuantity(courseList.get(i));
-				System.out.println();
+					displayCourseWithQuantity(courseList.get(i));
+					System.out.println();
 				}
 			}
 			System.out.println("--------------------------------------------------------------------------------------------");
@@ -120,7 +128,10 @@ public class AppliFormation {
 			System.out.println("Votre panier est vide");
 		}
 	}
-
+	/**
+	 * Affiche l'intégralité du panier, avec les ID de chaque formation
+	 * @param courseList - le panier à afficher (pas forcément utile de le passer en paramètre dans la version actuelle de l'app)
+	 */
 	public static void displayCartWithID (HashMap<Integer, ArrayList<String>> courseList) {
 
 		if(courseList.size()>0) {
@@ -142,6 +153,11 @@ public class AppliFormation {
 			System.out.println("Votre panier est vide");
 		}
 	}
+	/**
+	 * Affiche une formation du panier avec son ID
+	 * @param formation - la formation à afficher
+	 * @param index - l'index de la formation, c'est à dire sa clef dans la HashMap
+	 */
 
 	public static void displayCourseFromCartWithID(ArrayList<String> formation, int index) {
 
@@ -178,6 +194,12 @@ public class AppliFormation {
 		System.out.println("-------------------------------------------------------------------------------");
 	}
 
+	/**
+	 * Affiche une formations avec son identifiant
+	 * @param formation - la formation à afficher
+	 * @param index - l'index de la formation, c'est à dire sa clef dans la HashMap
+	 */
+
 	public static void displayCourseWithID(ArrayList<String> formation, int index) {
 
 		if(index!=0) {
@@ -209,6 +231,7 @@ public class AppliFormation {
 
 	/**
 	 * Ajouter une formation au panier
+	 * @param index - l'index de la formation à ajouter
 	 */
 
 	public static void addCourseToCart(int index) {
@@ -246,18 +269,18 @@ public class AppliFormation {
 		formation.add( CART.get(index).get(4));
 
 		int quantite = Integer.parseInt(formation.get(4));
-		
+
 		if( quantite > 1 ) {
 
-		quantite -=1;
+			quantite -=1;
 
-		formation.set( 4 , String.valueOf(quantite));
+			formation.set( 4 , String.valueOf(quantite));
 
-		CART.put(index, formation);
+			CART.put(index, formation);
 		}else if (quantite == 1 ) {
-			
+
 			formation.set( 4 , "0");
-			
+
 			CART.put(index, formation);
 		}else {
 			System.out.println("Cette formation n'est pas présente dans votre panier");
@@ -287,6 +310,10 @@ public class AppliFormation {
 		return input;
 	}
 
+	/**
+	 * Permet à l'utilisateur de choisir une formation en entrant son ID
+	 * @return input - le choix de l'utilisateur en entier
+	 */
 	public static int selectCourseFromCart() {
 
 		int input = -1;
@@ -304,41 +331,47 @@ public class AppliFormation {
 		return input;
 
 	}
-	
+
 	/**
 	 * Calcule et renvoie le prix total du panier
 	 * @return prixTotal - le prix total du panier en entier
 	 */
-	
+
 	public static int getPrice() {
-		
+
 		int prix = 0;
 		int prixTotal = 0;
-		
-		for(int i = 0 ; i < CART.size() ; i ++) {
-			
+
+		for(int i = 1 ; i < CART.size() ; i ++) {
+
 			if (CART.get(i).get(4) != "0") {
-				prix = Integer.parseInt(CART.get(i).get(3));
+
+				prix = Integer.parseInt(CART.get(i).get(3)) * Integer.parseInt(CART.get(i).get(4));
+
 				prixTotal += prix;
 			}
-			
-			
+
+
 		}
-		
+
 		return prixTotal;
 	}
-	
+
 	/**
 	 * Permet à l'utilisateur de passer commande
 	 * 
 	 */
-	
+
 	public static void checkout() {
-		
+
 		displayCart(CART);
-		
-		System.out.println(getPrice());
-		
+
+		System.out.println( "Le prix total de votre commande est de : " + getPrice() + " euros.");
+
+		CART.clear();
+
+		createCart();
+
 	}
 
 	/**
@@ -352,7 +385,8 @@ public class AppliFormation {
 		int input;
 
 		while(!leaving) {
-			System.out.println("-------------------------------------------------------------------------------\n"
+			System.out.println(""
+					+ "-------------------------------------------------------------------------------\n"
 					+ "|          Que souhaitez-vous faire?                                          |\n"
 					+ "| 1 : Afficher la liste des formations                                        |\n"
 					+ "| 2 : Ajouter une formation à mon panier                                      |\n"
@@ -391,23 +425,25 @@ public class AppliFormation {
 				displayCart(CART);
 
 				break;
-				
+
 			case 5 :
-				
+
 				checkout();
+
+				break;
 
 			case 6 :
 
 				System.out.println("Merci d'avoir utilisé AppliFormation, bonne journée!");
+
 				leaving = true;
 
 				break;
 
 			default:
 
-				System.out.println("Veuillez entrer une valeur comprise entre 1 et 5");
+				System.out.println("Veuillez entrer une valeur comprise entre 1 et 6");
 			}
-
 		}
 	}
 
@@ -423,8 +459,6 @@ public class AppliFormation {
 		createCart();
 
 		afficherMessageBienvenue();
-
-		//displayCourseList(LISTEFORMATIONS);
 
 		mainMenu();
 
