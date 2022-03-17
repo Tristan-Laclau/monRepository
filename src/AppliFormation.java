@@ -38,14 +38,14 @@ public class AppliFormation {
 			LISTEFORMATIONS.put(i, returnFormation(i));
 		}
 	}
-	
+
 	public static void createCart() {
-		
+
 		for (int i = 0 ; i < NOMFORMATION.length ; i ++) {
 
 			CART.put(i, returnFormation(i));
 		}
-		
+
 	}
 
 	/**
@@ -110,12 +110,48 @@ public class AppliFormation {
 			System.out.println("--------------------------------------------------------------------------------------------");
 
 			for(int i = 1 ; i < courseList.size() ; i++ ) {
+				if(courseList.get(i).get(4) != "0") {
 				displayCourseWithQuantity(courseList.get(i));
+				System.out.println();
+				}
 			}
 			System.out.println("--------------------------------------------------------------------------------------------");
 		}else {
 			System.out.println("Votre panier est vide");
 		}
+	}
+
+	public static void displayCartWithID (HashMap<Integer, ArrayList<String>> courseList) {
+
+		if(courseList.size()>0) {
+
+			System.out.println("---------------------------------------------------------------------------------------------------------");
+			displayCourseWithQuantity(LISTEFORMATIONS.get(0));
+
+			System.out.println();
+			System.out.println("---------------------------------------------------------------------------------------------------------");
+
+			for(int i = 1 ; i < courseList.size() ; i++ ) {
+				if(courseList.get(i).get(4) != "0") {
+					displayCourseFromCartWithID(courseList.get(i), i);
+					System.out.println();
+				}
+			}
+			System.out.println("---------------------------------------------------------------------------------------------------------");
+		}else {
+			System.out.println("Votre panier est vide");
+		}
+	}
+
+	public static void displayCourseFromCartWithID(ArrayList<String> formation, int index) {
+
+		if(index!=0) {
+			System.out.printf("| %-4s | %-15s | %-10s | %-38s | %-4s | %-10s |", index, formation.get(0), formation.get(1),formation.get(2),formation.get(3),formation.get(4));
+
+		}else
+			System.out.printf("| %-4s | %-15s | %-10s | %-38s | %-4s | %-10s |", "ID",formation.get(0), formation.get(1),formation.get(2),formation.get(3),formation.get(4));
+
+
 	}
 
 	/**
@@ -126,14 +162,19 @@ public class AppliFormation {
 
 
 		System.out.println("-------------------------------------------------------------------------------");
+
 		displayCourseWithID(courseList.get(0), 0);
+
 		System.out.println();
+
 		System.out.println("-------------------------------------------------------------------------------");
 
 		for(int i = 1 ; i < courseList.size() ; i++ ) {
+
 			displayCourseWithID(courseList.get(i), i);
 			System.out.println();
 		}
+
 		System.out.println("-------------------------------------------------------------------------------");
 	}
 
@@ -143,6 +184,7 @@ public class AppliFormation {
 			System.out.printf("| %-4s | %-15s | %-10s | %-38s | %-4s |", index, formation.get(0), formation.get(1),formation.get(2),formation.get(3));
 		}else
 			System.out.printf("| %-4s | %-15s | %-10s | %-38s | %-4s |", "ID",formation.get(0), formation.get(1),formation.get(2),formation.get(3));
+
 	}
 
 
@@ -155,15 +197,14 @@ public class AppliFormation {
 		System.out.printf("| %-15s | %-10s | %-38s |%-4s |",formation.get(0), formation.get(1),formation.get(2),formation.get(3));
 
 	}
-	
+
 	public static void displayCourseWithQuantity(ArrayList<String> formation) {
-		
+
 		if(formation.get(4) != "0") {
-			
-		System.out.printf("| %-15s | %-10s | %-38s |%-4s | %-10s |",formation.get(0), formation.get(1),formation.get(2),formation.get(3),formation.get(4));
-		System.out.println();
+
+			System.out.printf("| %-15s | %-10s | %-38s |%-4s | %-10s |",formation.get(0), formation.get(1),formation.get(2),formation.get(3),formation.get(4));
 		}
-		
+
 	}
 
 	/**
@@ -171,32 +212,52 @@ public class AppliFormation {
 	 */
 
 	public static void addCourseToCart(int index) {
-		
+
 		ArrayList<String> formation = new ArrayList<String>();
-		
+
 		formation.add( CART.get(index).get(0));
 		formation.add( CART.get(index).get(1));
 		formation.add( CART.get(index).get(2));
 		formation.add( CART.get(index).get(3));
 		formation.add( CART.get(index).get(4));
-		
+
 		int quantite = Integer.parseInt(formation.get(4));
-		
+
 		quantite +=1;
-		
+
 		formation.set( 4 , String.valueOf(quantite));
 
 		CART.put(index, formation);
-		
+
 	}
-	
+
 	/**
 	 * Retirer une formation du panier
 	 * @param index - l'index de la formation à retirer
 	 */
 	public static void removeCourseFromCart(int index) {
+
+		ArrayList<String> formation = new ArrayList<String>();
+
+		formation.add( CART.get(index).get(0));
+		formation.add( CART.get(index).get(1));
+		formation.add( CART.get(index).get(2));
+		formation.add( CART.get(index).get(3));
+		formation.add( CART.get(index).get(4));
+
+		int quantite = Integer.parseInt(formation.get(4));
 		
-		
+		if( quantite > 0 ) {
+
+		quantite -=1;
+
+		formation.set( 4 , String.valueOf(quantite));
+
+		CART.put(index, formation);
+		}else {
+			System.out.println("Cette formation n'est pas présente dans votre panier");
+		}
+
 	}
 
 	/**
@@ -219,6 +280,24 @@ public class AppliFormation {
 		input = scan.nextInt();
 
 		return input;
+	}
+
+	public static int selectCourseFromCart() {
+
+		int input = -1;
+
+		displayCourseList(CART);
+
+		System.out.println("Entrez l'ID de la formation que vous souhaitez retirer");
+
+		displayCartWithID(CART);
+
+		while(!scan.hasNextInt())scan.next();
+
+		input = scan.nextInt();
+
+		return input;
+
 	}
 
 	/**
@@ -260,9 +339,9 @@ public class AppliFormation {
 				break;
 
 			case 3 : 		
-				
-				System.out.println("Fonction à ajouter");
-				
+
+				removeCourseFromCart(selectCourseFromCart());
+
 				break;
 
 			case 4 :
@@ -272,14 +351,14 @@ public class AppliFormation {
 				break;
 
 			case 5 :
-				
+
 				System.out.println("Merci d'avoir utilisé AppliFormation, bonne journée!");
 				leaving = true;
 
 				break;
-			
+
 			default:
-				
+
 				System.out.println("Veuillez entrer une valeur comprise entre 1 et 5");
 			}
 
@@ -294,7 +373,7 @@ public class AppliFormation {
 	public static void main (String[] args) {
 
 		createCourseList();
-		
+
 		createCart();
 
 		afficherMessageBienvenue();
