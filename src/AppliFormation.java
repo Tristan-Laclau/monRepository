@@ -6,25 +6,50 @@ public class AppliFormation {
 
 	public static Scanner scan = new Scanner (System.in);
 
-	/*
-	private static String[] MENUFORMATIONS = {"0","COURS          ", "NB/JOURS", "DESCRIPTION                       ","PRIX"};
-	private static String[] FORMATION1     = {"1","Java           ", "   20   ", "Java SE 8 : Syntaxe & Poo         ","3000"};
-	private static String[] FORMATION2     = {"2","Java avancé    ", "   20   ", "Exceptions, fichiers, Jdbc, thread","5000"};
-	private static String[] FORMATION3     = {"3","Spring         ", "   20   ", "Spring core/Mvc/Security          ","5000"};
-	private static String[] FORMATION4     = {"4","Php frameworks ", "   15   ", "Symphony                          ","2500"};
-	private static String[] FORMATION5     = {"5","C#             ", "   20   ", "DotNetCore                        ","5000"};
-	public static String[][] LISTEFORMATIONS = new String [][] {MENUFORMATIONS,FORMATION1,FORMATION2, FORMATION3,FORMATION4,FORMATION5};
-	 */
+	//Les formations sont découpées en Nom, Durée, Description, Prix et Quantité afin de faciliter l'ajout et le retrait de formations
 
 	private static String[] NOMFORMATION = {"Cours","Java","Java avancé","Spring","Php framworks","C#"};
-	private static String[] DUREEFORMATION = {"NB/JOURS","20","20","20","15","20"};
+	private static String[] DUREEFORMATION = {"NB/JOURS","20","20","20","15","20","0","30","40"};
 	private static String[] DESCRIPTIONFORMATION = {"Description","Java SE 8 : Syntaxe & Poo","Exceptions, fichiers, Jdbc, thread ","Spring core/Mvc/Security","Symphony","DotNetCore"};
 	private static String[] PRIXFORMATION = {"Prix","3000","5000","5000","2500","5000"};
 	private static String[] QUANTITE = {"Quantité","0","0","0","0","0"};
 
+	private static String[] NOMFORMATIONAVENIR = {"Cours","Git","C++"};
+	private static String[] DUREEFORMATIONAVENIR = {"NB/JOURS","30","40"};
+	private static String[] DESCRIPTIONFORMATIONAVENIR = {"Description","Git et GitHub","POO"};
+	private static String[] PRIXFORMATIONAVENIR = {"Prix","5500","3450"};
+
+	/*
+	 * Piste pour question 5) -> ajouter une option permettant de changer de langue
+	 *  -> permettre de rajouter une formation?
+	 *  -> 
+	 */
+
+	/*
+	private static String[] COURSENAME = {"Course","Java","Advanced Java","Spring","Php framworks","C#"};
+	private static String[] COURSELENGTH = {"NB/Days","20","20","20","15","20"};
+	private static String[] COURSEDESCRIPTION = {"Description","Java SE 8 : OOP","Exceptions, files, Jdbc, thread ","Spring core/Mvc/Security","Symphony","DotNetCore"};
+	private static String[] COURSEPRICE = {"Price","3000","5000","5000","2500","5000"};
+	private static String[] QUANTITY = {"Quantity","0","0","0","0","0"};
+	 */
+
+	/**
+	 * Cart est le panier de l'utilisateur
+	 */
+
 	public static HashMap<Integer, ArrayList<String>> CART = new HashMap<Integer, ArrayList<String>>();
 
+	/**
+	 * LISTEFORMATIONS est la liste de toutes les formations actuellement disponible
+	 */
+
 	public static HashMap<Integer, ArrayList<String>> LISTEFORMATIONS = new HashMap<Integer, ArrayList<String>>();
+
+	/**
+	 * UPCOMINGCOURSES est la liste des formations à venir
+	 */
+
+	public static HashMap<Integer, ArrayList<String>> FORMATIONSAVENIR = new HashMap<Integer, ArrayList<String>>();
 
 	/**
 	 * Rempli la table avec les formations renvoyées par createFormation
@@ -34,13 +59,12 @@ public class AppliFormation {
 	public static void createCourseList () {
 
 		for (int i = 0 ; i < NOMFORMATION.length ; i ++) {
-
 			LISTEFORMATIONS.put(i, returnFormation(i));
 		}
 	}
 
 	/**
-	 * Instancie le panier
+	 * Créé le panier
 	 */
 
 	public static void createCart() {
@@ -50,6 +74,35 @@ public class AppliFormation {
 			CART.put(i, returnFormation(i));
 		}
 
+	}
+
+	/**
+	 * Créé la liste des formations à venir
+	 */
+
+	public static void createUpcomingCourses() {
+
+		for (int i = 0 ; i < NOMFORMATIONAVENIR.length ; i ++) {
+			FORMATIONSAVENIR.put(i, returnFormationAVenir(i));
+		}
+	}
+
+	/**
+	 * Renvoie une formation à venir pour la rentrer dans une table
+	 * @param index
+	 * @return formation : une ArrayList complète représentant une formation
+	 */
+
+	public static ArrayList<String> returnFormationAVenir(int index){
+
+		ArrayList<String> formation = new ArrayList<String>();
+
+		formation.add(NOMFORMATIONAVENIR[index]);
+		formation.add(DUREEFORMATIONAVENIR[index]);
+		formation.add(DESCRIPTIONFORMATIONAVENIR[index]);
+		formation.add(PRIXFORMATIONAVENIR[index]);
+
+		return formation;
 	}
 
 	/**
@@ -109,7 +162,7 @@ public class AppliFormation {
 
 	public static void displayCart(HashMap<Integer, ArrayList<String>> courseList) {
 
-		if(courseList.size()>0) {
+		if(getPrice()!=0) {
 
 			System.out.println("--------------------------------------------------------------------------------------------");
 			displayCourseWithQuantity(LISTEFORMATIONS.get(0));
@@ -134,7 +187,7 @@ public class AppliFormation {
 	 */
 	public static void displayCartWithID (HashMap<Integer, ArrayList<String>> courseList) {
 
-		if(courseList.size()>0) {
+		if(getPrice()!=0) {
 
 			System.out.println("---------------------------------------------------------------------------------------------------------");
 			displayCourseWithQuantity(LISTEFORMATIONS.get(0));
@@ -236,21 +289,27 @@ public class AppliFormation {
 
 	public static void addCourseToCart(int index) {
 
-		ArrayList<String> formation = new ArrayList<String>();
+		if(index < LISTEFORMATIONS.size()) {
 
-		formation.add( CART.get(index).get(0));
-		formation.add( CART.get(index).get(1));
-		formation.add( CART.get(index).get(2));
-		formation.add( CART.get(index).get(3));
-		formation.add( CART.get(index).get(4));
+			ArrayList<String> formation = new ArrayList<String>();
 
-		int quantite = Integer.parseInt(formation.get(4));
+			formation.add( CART.get(index).get(0));
+			formation.add( CART.get(index).get(1));
+			formation.add( CART.get(index).get(2));
+			formation.add( CART.get(index).get(3));
+			formation.add( CART.get(index).get(4));
 
-		quantite +=1;
+			int quantite = Integer.parseInt(formation.get(4));
 
-		formation.set( 4 , String.valueOf(quantite));
+			quantite +=1;
 
-		CART.put(index, formation);
+			formation.set( 4 , String.valueOf(quantite));
+
+			CART.put(index, formation);
+
+		}else {
+			System.out.println("L'ID entré ne correspond à aucune formation");
+		}
 
 	}
 
@@ -259,6 +318,8 @@ public class AppliFormation {
 	 * @param index - l'index de la formation à retirer
 	 */
 	public static void removeCourseFromCart(int index) {
+		
+		if (getPrice()!=0) {
 
 		ArrayList<String> formation = new ArrayList<String>();
 
@@ -277,13 +338,18 @@ public class AppliFormation {
 			formation.set( 4 , String.valueOf(quantite));
 
 			CART.put(index, formation);
+
 		}else if (quantite == 1 ) {
 
-			formation.set( 4 , "0");
+			formation.set( 4 , "0" );
 
 			CART.put(index, formation);
+
 		}else {
 			System.out.println("Cette formation n'est pas présente dans votre panier");
+		}
+		}else {
+			System.out.println("Votre panier est vide");
 		}
 
 	}
@@ -296,8 +362,6 @@ public class AppliFormation {
 	{
 
 		int input = -1;
-
-		displayCourseList(LISTEFORMATIONS);
 
 		System.out.println("Entrez l'ID de la formation que vous souhaitez ajouter");
 
@@ -315,10 +379,10 @@ public class AppliFormation {
 	 * @return input - le choix de l'utilisateur en entier
 	 */
 	public static int selectCourseFromCart() {
+		
+		if (getPrice()!=0) {
 
 		int input = -1;
-
-		displayCourseList(CART);
 
 		System.out.println("Entrez l'ID de la formation que vous souhaitez retirer");
 
@@ -327,8 +391,12 @@ public class AppliFormation {
 		while(!scan.hasNextInt())scan.next();
 
 		input = scan.nextInt();
+		
 
 		return input;
+		} else {
+			return 0;
+		}
 
 	}
 
@@ -359,18 +427,52 @@ public class AppliFormation {
 
 	/**
 	 * Permet à l'utilisateur de passer commande
-	 * 
 	 */
 
 	public static void checkout() {
 
-		displayCart(CART);
+		if(getPrice()==0) {
+			
+			System.out.println("Votre panier est vide");
+			
+		} else {
 
-		System.out.println( "Le prix total de votre commande est de : " + getPrice() + " euros.");
+			displayCart(CART);
 
-		CART.clear();
+			System.out.println( "Le prix total de votre commande est de : " + getPrice() + " euros.");
 
-		createCart();
+			System.out.println("Tapez 1 pour passer commande, 2 pour annuler");
+
+			while(!scan.hasNextInt())scan.next();
+
+			int input = scan.nextInt();
+
+			if (input == 1) {
+
+				System.out.println("Merci de votre achat, retour au menu principal");
+
+				CART.clear();
+
+				createCart();
+
+			} else if (input == 2) {
+
+				System.out.println("Retour au menu principal");
+
+			} else {
+				System.out.println("Mauvaise saisie, retour au menu principal");
+			}
+		}
+
+	}
+
+	/**
+	 * Affiche la liste des formations à venir
+	 */
+
+	public static void displayUpcomingCourses() {
+
+		displayCourseList(FORMATIONSAVENIR);
 
 	}
 
@@ -393,7 +495,8 @@ public class AppliFormation {
 					+ "| 3 : Retirer une formation de mon panier                                     |\n"
 					+ "| 4 : Afficher mon panier                                                     |\n"
 					+ "| 5 : Passer commande                                                         |\n"
-					+ "| 6 : Quitter l'application                                                   |\n"
+					+ "| 6 : Afficher la liste des formations à venir                                |\n"
+					+ "| 7 : Quitter l'application                                                   |\n"
 					+ "-------------------------------------------------------------------------------");
 
 			while(!scan.hasNextInt())scan.next();
@@ -432,7 +535,13 @@ public class AppliFormation {
 
 				break;
 
-			case 6 :
+			case 6 : 
+
+				displayUpcomingCourses();
+
+				break;
+
+			case 7 :
 
 				System.out.println("Merci d'avoir utilisé AppliFormation, bonne journée!");
 
@@ -442,7 +551,7 @@ public class AppliFormation {
 
 			default:
 
-				System.out.println("Veuillez entrer une valeur comprise entre 1 et 6");
+				System.out.println("Veuillez entrer une valeur comprise entre 1 et 7");
 			}
 		}
 	}
@@ -457,6 +566,8 @@ public class AppliFormation {
 		createCourseList();
 
 		createCart();
+
+		createUpcomingCourses();
 
 		afficherMessageBienvenue();
 
