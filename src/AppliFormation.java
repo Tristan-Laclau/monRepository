@@ -247,13 +247,18 @@ public class AppliFormation {
 
 		int quantite = Integer.parseInt(formation.get(4));
 		
-		if( quantite > 0 ) {
+		if( quantite > 1 ) {
 
 		quantite -=1;
 
 		formation.set( 4 , String.valueOf(quantite));
 
 		CART.put(index, formation);
+		}else if (quantite == 1 ) {
+			
+			formation.set( 4 , "0");
+			
+			CART.put(index, formation);
 		}else {
 			System.out.println("Cette formation n'est pas présente dans votre panier");
 		}
@@ -299,6 +304,42 @@ public class AppliFormation {
 		return input;
 
 	}
+	
+	/**
+	 * Calcule et renvoie le prix total du panier
+	 * @return prixTotal - le prix total du panier en entier
+	 */
+	
+	public static int getPrice() {
+		
+		int prix = 0;
+		int prixTotal = 0;
+		
+		for(int i = 0 ; i < CART.size() ; i ++) {
+			
+			if (CART.get(i).get(4) != "0") {
+				prix = Integer.parseInt(CART.get(i).get(3));
+				prixTotal += prix;
+			}
+			
+			
+		}
+		
+		return prixTotal;
+	}
+	
+	/**
+	 * Permet à l'utilisateur de passer commande
+	 * 
+	 */
+	
+	public static void checkout() {
+		
+		displayCart(CART);
+		
+		System.out.println(getPrice());
+		
+	}
 
 	/**
 	 * Affiche le menu principal
@@ -317,7 +358,8 @@ public class AppliFormation {
 					+ "| 2 : Ajouter une formation à mon panier                                      |\n"
 					+ "| 3 : Retirer une formation de mon panier                                     |\n"
 					+ "| 4 : Afficher mon panier                                                     |\n"
-					+ "| 5 : Quitter l'application                                                   |\n"
+					+ "| 5 : Passer commande                                                         |\n"
+					+ "| 6 : Quitter l'application                                                   |\n"
 					+ "-------------------------------------------------------------------------------");
 
 			while(!scan.hasNextInt())scan.next();
@@ -349,8 +391,12 @@ public class AppliFormation {
 				displayCart(CART);
 
 				break;
-
+				
 			case 5 :
+				
+				checkout();
+
+			case 6 :
 
 				System.out.println("Merci d'avoir utilisé AppliFormation, bonne journée!");
 				leaving = true;
