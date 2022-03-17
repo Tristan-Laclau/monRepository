@@ -20,6 +20,7 @@ public class AppliFormation {
 	private static String[] DUREEFORMATION = {"NB/JOURS","20","20","20","15","20"};
 	private static String[] DESCRIPTIONFORMATION = {"Description","Java SE 8 : Syntaxe & Poo","Exceptions, fichiers, Jdbc, thread ","Spring core/Mvc/Security","Symphony","DotNetCore"};
 	private static String[] PRIXFORMATION = {"Prix","3000","5000","5000","2500","5000"};
+	private static String[] QUANTITE = {"Quantité","0","0","0","0","0"};
 
 	public static HashMap<Integer, ArrayList<String>> CART = new HashMap<Integer, ArrayList<String>>();
 
@@ -37,6 +38,15 @@ public class AppliFormation {
 			LISTEFORMATIONS.put(i, returnFormation(i));
 		}
 	}
+	
+	public static void createCart() {
+		
+		for (int i = 0 ; i < NOMFORMATION.length ; i ++) {
+
+			CART.put(i, returnFormation(i));
+		}
+		
+	}
 
 	/**
 	 * Renvoie une formation pour la rentrer dans une table
@@ -52,6 +62,7 @@ public class AppliFormation {
 		formation.add(DUREEFORMATION[index]);
 		formation.add(DESCRIPTIONFORMATION[index]);
 		formation.add(PRIXFORMATION[index]);
+		formation.add(QUANTITE[index]);
 
 		return formation;
 	}
@@ -76,6 +87,7 @@ public class AppliFormation {
 
 	public static void displayCourseList(HashMap<Integer, ArrayList<String>> courseList) {
 
+		System.out.println("-------------------------------------------------------------------------------");
 		displayCourse(courseList.get(0));
 		System.out.println();
 		System.out.println("-------------------------------------------------------------------------------");
@@ -91,17 +103,16 @@ public class AppliFormation {
 
 		if(courseList.size()>0) {
 
-			System.out.println("-------------------------------------------------------------------------------");
-			displayCourse(LISTEFORMATIONS.get(0));
+			System.out.println("--------------------------------------------------------------------------------------------");
+			displayCourseWithQuantity(LISTEFORMATIONS.get(0));
 
 			System.out.println();
-			System.out.println("-------------------------------------------------------------------------------");
+			System.out.println("--------------------------------------------------------------------------------------------");
 
-			for(int i = 0 ; i < courseList.size() ; i++ ) {
-				displayCourse(courseList.get(i));
-				System.out.println();
+			for(int i = 1 ; i < courseList.size() ; i++ ) {
+				displayCourseWithQuantity(courseList.get(i));
 			}
-			System.out.println("-------------------------------------------------------------------------------");
+			System.out.println("--------------------------------------------------------------------------------------------");
 		}else {
 			System.out.println("Votre panier est vide");
 		}
@@ -129,9 +140,9 @@ public class AppliFormation {
 	public static void displayCourseWithID(ArrayList<String> formation, int index) {
 
 		if(index!=0) {
-			System.out.printf("| %-4s | %-15s | %-10s | %-38s |%-4s |", index, formation.get(0), formation.get(1),formation.get(2),formation.get(3));
+			System.out.printf("| %-4s | %-15s | %-10s | %-38s | %-4s |", index, formation.get(0), formation.get(1),formation.get(2),formation.get(3));
 		}else
-			System.out.printf("| %-4s | %-15s | %-10s | %-38s |%-4s |", "ID",formation.get(0), formation.get(1),formation.get(2),formation.get(3));
+			System.out.printf("| %-4s | %-15s | %-10s | %-38s | %-4s |", "ID",formation.get(0), formation.get(1),formation.get(2),formation.get(3));
 	}
 
 
@@ -144,14 +155,47 @@ public class AppliFormation {
 		System.out.printf("| %-15s | %-10s | %-38s |%-4s |",formation.get(0), formation.get(1),formation.get(2),formation.get(3));
 
 	}
+	
+	public static void displayCourseWithQuantity(ArrayList<String> formation) {
+		
+		if(formation.get(4) != "0") {
+			
+		System.out.printf("| %-15s | %-10s | %-38s |%-4s | %-10s |",formation.get(0), formation.get(1),formation.get(2),formation.get(3),formation.get(4));
+		System.out.println();
+		}
+		
+	}
 
 	/**
 	 * Ajouter une formation au panier
 	 */
 
 	public static void addCourseToCart(int index) {
+		
+		ArrayList<String> formation = new ArrayList<String>();
+		
+		formation.add( CART.get(index).get(0));
+		formation.add( CART.get(index).get(1));
+		formation.add( CART.get(index).get(2));
+		formation.add( CART.get(index).get(3));
+		formation.add( CART.get(index).get(4));
+		
+		int quantite = Integer.parseInt(formation.get(4));
+		
+		quantite +=1;
+		
+		formation.set( 4 , String.valueOf(quantite));
 
-		CART.put(CART.size(), returnFormation(index));
+		CART.put(index, formation);
+		
+	}
+	
+	/**
+	 * Retirer une formation du panier
+	 * @param index - l'index de la formation à retirer
+	 */
+	public static void removeCourseFromCart(int index) {
+		
 		
 	}
 
@@ -250,6 +294,8 @@ public class AppliFormation {
 	public static void main (String[] args) {
 
 		createCourseList();
+		
+		createCart();
 
 		afficherMessageBienvenue();
 
