@@ -348,8 +348,6 @@ public class AppliFormation {
 
 		quantite = Integer.parseInt(formation.get(4));
 		
-		
-
 		if( quantite > 1 ) {
 
 			quantite -=1;
@@ -468,12 +466,29 @@ public class AppliFormation {
 			int input = scan.nextInt();
 
 			if (input == 1) {
+				
+				System.out.println("Tapez 1 pour confirmer votre achat");
 
+				while(!scan.hasNextInt())scan.next();
+
+				input = scan.nextInt();
+				
+				if (input == 1) {
+					
 				System.out.println("Merci de votre achat, retour au menu principal");
+	
 
 				CART.clear();
 
 				createCart();
+				
+				} else {
+					
+					System.out.println("Opération annulée, retour au menu principal");
+					
+					input = 0;
+				}
+				
 
 			} else if (input == 2) {
 
