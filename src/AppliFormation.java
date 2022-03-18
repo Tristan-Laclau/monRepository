@@ -2,9 +2,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * Application de visualisation et d'achat de formations
+ * @author Stagiaires03P
+ *
+ */
+
 public class AppliFormation {
 
-	public static Scanner scan = new Scanner (System.in);
+	private static Scanner scan = new Scanner (System.in);
 
 	//Les formations sont découpées en Nom, Durée, Description, Prix et Quantité afin de faciliter l'ajout et le retrait de formations
 
@@ -19,22 +25,8 @@ public class AppliFormation {
 	private static String[] DESCRIPTIONFORMATIONAVENIR = {"Description","Git et GitHub","POO"};
 	private static String[] PRIXFORMATIONAVENIR = {"Prix","5500","3450"};
 
-	/*
-	 * Piste pour question 5) -> ajouter une option permettant de changer de langue
-	 *  -> permettre de rajouter une formation?
-	 *  -> 
-	 */
-
-	/*
-	private static String[] COURSENAME = {"Course","Java","Advanced Java","Spring","Php framworks","C#"};
-	private static String[] COURSELENGTH = {"NB/Days","20","20","20","15","20"};
-	private static String[] COURSEDESCRIPTION = {"Description","Java SE 8 : OOP","Exceptions, files, Jdbc, thread ","Spring core/Mvc/Security","Symphony","DotNetCore"};
-	private static String[] COURSEPRICE = {"Price","3000","5000","5000","2500","5000"};
-	private static String[] QUANTITY = {"Quantity","0","0","0","0","0"};
-	 */
-
 	/**
-	 * Cart est le panier de l'utilisateur
+	 * CART est le panier de l'utilisateur
 	 */
 
 	public static HashMap<Integer, ArrayList<String>> CART = new HashMap<Integer, ArrayList<String>>();
@@ -52,13 +44,13 @@ public class AppliFormation {
 	public static HashMap<Integer, ArrayList<String>> FORMATIONSAVENIR = new HashMap<Integer, ArrayList<String>>();
 
 	/**
-	 * Rempli la table avec les formations renvoyées par createFormation
-	 * @see createFormation
+	 * Rempli la table avec les formations renvoyées par returnFormation
 	 */
 
 	public static void createCourseList () {
 
 		for (int i = 0 ; i < NOMFORMATION.length ; i ++) {
+			
 			LISTEFORMATIONS.put(i, returnFormation(i));
 		}
 	}
@@ -89,7 +81,7 @@ public class AppliFormation {
 
 	/**
 	 * Renvoie une formation à venir pour la rentrer dans une table
-	 * @param index
+	 * @param index - l'index de la formation
 	 * @return formation : une ArrayList complète représentant une formation
 	 */
 
@@ -107,7 +99,7 @@ public class AppliFormation {
 
 	/**
 	 * Renvoie une formation pour la rentrer dans une table
-	 * @param index
+	 * @param index - l'index de la formation
 	 * @return formation : une ArrayList complète représentant une formation
 	 */
 
@@ -145,12 +137,17 @@ public class AppliFormation {
 	public static void displayCourseList(HashMap<Integer, ArrayList<String>> courseList) {
 
 		System.out.println("-------------------------------------------------------------------------------");
+		
 		displayCourse(courseList.get(0));
+		
 		System.out.println();
+		
 		System.out.println("-------------------------------------------------------------------------------");
 
 		for(int i = 1 ; i < courseList.size() ; i++ ) {
+			
 			displayCourse(courseList.get(i));
+			
 			System.out.println();
 		}
 		System.out.println("-------------------------------------------------------------------------------");
@@ -165,13 +162,17 @@ public class AppliFormation {
 		if(getPrice()!=0) {
 
 			System.out.println("--------------------------------------------------------------------------------------------");
+			
 			displayCourseWithQuantity(LISTEFORMATIONS.get(0));
 
 			System.out.println();
+			
 			System.out.println("--------------------------------------------------------------------------------------------");
 
 			for(int i = 1 ; i < courseList.size() ; i++ ) {
+				
 				if(courseList.get(i).get(4) != "0") {
+					
 					displayCourseWithQuantity(courseList.get(i));
 					System.out.println();
 				}
@@ -190,19 +191,26 @@ public class AppliFormation {
 		if(getPrice()!=0) {
 
 			System.out.println("---------------------------------------------------------------------------------------------------------");
+			
 			displayCourseWithQuantity(LISTEFORMATIONS.get(0));
 
 			System.out.println();
+			
 			System.out.println("---------------------------------------------------------------------------------------------------------");
 
 			for(int i = 1 ; i < courseList.size() ; i++ ) {
+				
 				if(courseList.get(i).get(4) != "0") {
+					
 					displayCourseFromCartWithID(courseList.get(i), i);
+					
 					System.out.println();
 				}
 			}
 			System.out.println("---------------------------------------------------------------------------------------------------------");
+			
 		}else {
+			
 			System.out.println("Votre panier est vide");
 		}
 	}
@@ -272,6 +280,11 @@ public class AppliFormation {
 		System.out.printf("| %-15s | %-10s | %-38s |%-4s |",formation.get(0), formation.get(1),formation.get(2),formation.get(3));
 
 	}
+	
+	/**
+	 * Affiche une formation ainsi que sa quantité dans le panier
+	 * @param formation : la formation à afficher
+	 */
 
 	public static void displayCourseWithQuantity(ArrayList<String> formation) {
 
@@ -289,7 +302,7 @@ public class AppliFormation {
 
 	public static void addCourseToCart(int index) {
 
-		if(index < LISTEFORMATIONS.size()) {
+		if(index < LISTEFORMATIONS.size() && index > 0) {
 
 			ArrayList<String> formation = new ArrayList<String>();
 
@@ -320,6 +333,10 @@ public class AppliFormation {
 	public static void removeCourseFromCart(int index) {
 		
 		if (getPrice()!=0) {
+		
+			int quantite = 0;
+			
+		if(index < LISTEFORMATIONS.size() && index > 0) {
 
 		ArrayList<String> formation = new ArrayList<String>();
 
@@ -329,7 +346,9 @@ public class AppliFormation {
 		formation.add( CART.get(index).get(3));
 		formation.add( CART.get(index).get(4));
 
-		int quantite = Integer.parseInt(formation.get(4));
+		quantite = Integer.parseInt(formation.get(4));
+		
+		
 
 		if( quantite > 1 ) {
 
@@ -344,6 +363,7 @@ public class AppliFormation {
 			formation.set( 4 , "0" );
 
 			CART.put(index, formation);
+		}
 
 		}else {
 			System.out.println("Cette formation n'est pas présente dans votre panier");
@@ -558,7 +578,7 @@ public class AppliFormation {
 
 	/**
 	 * Main du programme
-	 * @param args
+	 * @param args - arguments (non utilisé)
 	 */
 
 	public static void main (String[] args) {
